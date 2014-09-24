@@ -1,0 +1,7 @@
+script:
+  - git checkout travis
+  - echo $(date) >> CHANGES.md
+  - git add CHANGES.md
+  - git commit -m "Modified by travis build"
+  - git push
+
