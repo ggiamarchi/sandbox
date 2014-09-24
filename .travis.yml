@@ -1,0 +1,28 @@
+branches:
+  only:
+    - master
+
+before_script:
+  - git config user.email "guillaume.giamarchi@gmail.com"
+  - git config user.name "Guillaume Giamarchi"
+  - git config push.default simple
+  - git remote rm origin
+  - git remote add origin https://ggiamarchi:${GITHUB_TOKEN}@github.com/ggiamarchi/sandbox.git
+  - git fetch --all
+  - git checkout travis
+
+script:
+  - printf "# Travis Build %s\n\n" "${TRAVIS_BUILD_NUMBER}" > BUILD_${TRAVIS_BUILD_NUMBER}.md
+  - printf "%s\n\n" "$(date)" >> BUILD_${TRAVIS_BUILD_NUMBER}.md
+
+after_success:
+  - printf "Build success - https://travis-ci.org/ggiamarchi/sandbox/builds/${TRAVIS_BUILD_ID}\n"  >> BUILD_${TRAVIS_BUILD_NUMBER}.md
+
+after_failure:
+  - printf "Build failure - https://travis-ci.org/ggiamarchi/sandbox/builds/${TRAVIS_BUILD_ID}\n"  >> BUILD_${TRAVIS_BUILD_NUMBER}.md
+
+after_script:
+  - git add BUILD_${TRAVIS_BUILD_NUMBER}.md
+  - git commit -m "Modified by travis build"
+  - git push > /dev/null 2>&1
+
